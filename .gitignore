@@ -1,3 +1,6 @@
+development.ini
+production.ini
+
 *.py[cod]
 
 # C extensions

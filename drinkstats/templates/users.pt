@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+
+<head>
+	<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Drink Stats</title>
+
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+  <!--<link rel="stylesheet" type="text/css" href="css/flat-ui.css">-->
+  <link rel="stylesheet" href="/static/css/custom.css"/>
+  <link rel="stylesheet" href="/static/members-icons/css/members_icons.css"/>
+
+  <script type="text/js" src="/static/js/vendor/custom.modernizr.js"></script>
+  <script type="text/js" src="/static/js/toWord.js"></script>
+
+  <link href='//fonts.googleapis.com/css?family=Merriweather+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div id="menu" class="contain-to-grid sticky">
+		<nav class="top-bar">
+		  <ul class="title-area">
+		    <!-- Title Area -->
+		    <li class="name">
+		      <h1><a href="/"><img src="/static/images/csh.png" alt="CSH Logo"> Drink Stats </a></h1>
+		    </li>
+		    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+		    <li class="toggle-topbar"><a href="#"><span>Menu</span></a></li>
+		  </ul>
+
+		  <section class="top-bar-section">
+		    <!-- Left Nav Section -->
+		    <ul class="left">
+		    </ul>
+
+		    <!-- Right Nav Section -->
+		    <ul class="right">
+		      <li><a href="#">Members Home</a></li>
+		      <li><a href="http://www.csh.rit.edu/">Public Site</a></li>
+		      <li><a href="https://members.csh.rit.edu/logout/">Webauth Logout</a></li>
+		    </ul>
+		  </section>
+		</nav>
+	</div>
+
+	<!-- Main Body -->
+	<div id="main" class="row ">
+		<div class="large-12 center columns" id="container">
+			<div class="row panel" id="main-header">
+                <div id="view-options" class="button-bar">
+                    <form action="/user" method="POST">
+                        <input type="text" name="username" placeholder="username">
+                    </form>
+                </div>
+	            <div id="popular">
+                    <ul>
+                        <li><h3>Machines: &nbsp;</h3></li>
+                        <li class="popular"><a href="/machine/2"><h4>Big Drink &nbsp;</h4></a></li>
+                        <li class="popular"><a href="/machine/1"><h4>Little Drink &nbsp;</h4></a></li>
+                        <li class="popular"><a href="/machine/3"><h4>Snack &nbsp;</h4></a></li>
+	                </ul>
+                </div>
+            </div>
+            <h1>${username}</h1>
+           <div id="top_drinks_total" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="drinks_over_time" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="drinks_over_hours" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+ 
+       </div>
+	</div>
+
+
+
+  <script>
+	  document.write('<script src=' +
+	  ('__proto__' in {} ? '/static/js/vendor/zepto' : '/staticjs/vendor/jquery') +
+	  '.js><\/script>')
+  </script>
+  
+  <script src="/static/js/foundation.min.js"></script>
+  <script src="/static/js/foundation/foundation.dropdown.js"></script>
+  <script src="/static/js/foundation/foundation.topbar.js"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-75959-9', 'rit.edu');
+  ga('send', 'pageview');
+
+</script>
+  <script>
+    $(document).foundation();
+  </script>
+
+<script type="text/javascript">
+	var view = "icon";
+
+  	// Store the user's view preference in localStorage
+  	function toggleViewPreference() {
+        if (view == "list"){
+            view = "icon"
+        }
+        else{
+            view = "list"
+        }
+        localStorage.setItem("view", view)
+  		loadView();
+  	}
+
+  	function loadView() {
+  		// If the user wants list view, give them lists!
+  		if (view == "list") {
+  			//$(".list").addClass("no-bullet").removeClass("small-block-grid-4");
+  			$(".list").each(function(){
+  				var oldClass = ($(this).hasClass("small-block-grid-4")) ? "small-block-grid-4" : "small-block-grid-5";
+  				$(this).attr("data-oldclass", oldClass).removeClass(oldClass).addClass("no-bullet");
+  			});
+  			$(".list > li > a").removeClass("icon-box");
+  			$(".icon").filter(function() { 
+				return !$(this).parent().parent().hasClass("popular");
+			}).attr("style", "display:none");
+  		}
+  		// If the user wants icons, or hasn't picked a default, give them icons!
+  		else {
+  			//$(".list").removeClass("no-bullet").addClass("small-block-grid-4");
+  			$(".list").each(function(){
+  				var oldClass = $(this).attr("data-oldclass");
+  				$(this).addClass(oldClass).removeClass("no-bullet").attr("data-oldclass", "");
+  			});
+  			$(".list > li > a").addClass("icon-box");
+  			$(".icon").filter(function() { 
+				return !$(this).parent().parent().hasClass("popular");
+			}).attr("style", "");
+  		}
+  	}
+
+  	// Document ready event listener
+  	document.addEventListener("DOMContentLoaded", function() {
+  		// Load the user's view preference
+  		view = (typeof(Storage) !== "undefined") ? localStorage.getItem("view") : "icon";
+  		if (view == "list") loadView();
+  	}, false);
+</script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                $('#top_drinks_total').highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Popularity of Drinks'
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{point.y} {point.name}s</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                color: '#000000',
+                                connectorColor: '#000000',
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Drinks',
+                        point: {
+                            events: {
+                                click: function(e) {
+                                    location.href = e.point.url;
+                                    e.preventDefault();
+                                }
+                            }
+                        },
+                         
+                        data: [
+                            <tal:block repeat="item top_drinks">
+                            {name: "${str(item[1])}", y: ${item[0]}, url: '/drink/${ item[2] }'},
+                            </tal:block>
+                        ]
+                    }]
+                });
+            });
+        </script>
+        <script>
+            $(function() {
+            
+                $.getJSON('/api/user/${ username }', function(data) {
+                    $('#drinks_over_time').highcharts('StockChart', {
+                        chart: {
+                            type: 'area'
+                        },
+                        rangeSelector : {
+                            selected : 1
+                        },
+                        title : {
+                            text : 'Total Drinks Dropped for ${ username }'
+                        },
+                        yAxis: {
+                            min: 0
+                        },
+                        series : [{
+                            name : 'Drinks ',
+                            data : data,
+                        }]
+                    });
+                });
+            
+            });
+                                                                                        
+        
+        </script>
+        <script>
+            (function($){ // encapsulate jQuery
+
+            $(function () {
+                    $('#drinks_over_hours').highcharts({
+                        chart: {
+                            type: 'areaspline'
+                        },
+                        title: {
+                            text: 'Drinks Bought by Hour'
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 150,
+                            y: 100,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: '#FFFFFF'
+                        },
+                        xAxis: {
+                            categories: [
+                                '1am',
+                                '2am',
+                                '3am',
+                                '4am',
+                                '5am',
+                                '6am',
+                                '7am',
+                                '8am',
+                                '9am',
+                                '10am',
+                                '11am',
+                                'noon',
+                                '1pm',
+                                '2pm',
+                                '3pm',
+                                '4pm',
+                                '5pm',
+                                '6pm',
+                                '7pm',
+                                '8pm',
+                                '9pm',
+                                '10pm',
+                                '11pm',
+                                'midnight'
+                            ]
+                        },
+                        yAxis: {
+                            title: {
+                                text: '# of Drinks'
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            valueSuffix: ' drinks'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            areaspline: {
+                                fillOpacity: 0.5
+                            }
+                        },
+                        series: [{
+                            name: 'Drinks Dropped by ${ username }',
+                            data: [<tal:block repeat="hour hours"> ${ hour }, </tal:block>]
+                        }]
+                    });
+                });
+                
+
+            })(jQuery);
+
+        </script>
+ 
+
+</body>
+</html>
