@@ -21,6 +21,7 @@ def main(global_config, **settings):
     config.add_route('user_redirect', '/user')
     config.add_route('user_page', '/user/{username}')
     config.add_route('machine_page', '/machine/{machine_id}')
+    config.add_route('autocomplete', '/autocomplete')
 
     config.add_route('api_item_usage', '/api/drink/{item_id}')
     config.add_route('api_user_usage', '/api/user/{username}')
