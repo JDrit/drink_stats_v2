@@ -3,8 +3,41 @@ from sqlalchemy import func
 from sqlalchemy.sql import or_
 from datetime import datetime, timedelta
 
+def punchcard(start_date = None, end_date = None, username = None):
+    data = []
+    results = {}
+    if start_date and end_date:
+        if username:
+            times = DBSession.query(DropLog.time).filter(DropLog.time >= start_date, DropLog.time <= end_date, DropLog.username == username).all()
+        else:
+            times = DBSession.query(DropLog.time).filter(DropLog.time >= start_date, DropLog.time <= end_date).all()
+    else:
+        if username:
+            times = DBSession.query(DropLog.time).filter(DropLog.username == username).all()
+        else:
+            times = DBSession.query(DropLog.time).all()
+
+    biggest = 0
+    biggest_key = None
+    for time in times:
+        if (time[0].weekday(), time[0].hour) in results:
+            results[(time[0].weekday(), time[0].hour)] += 1
+            if results[(time[0].weekday(), time[0].hour)] > biggest:
+                biggest_key = (time[0].weekday(), time[0].hour)
+                biggest = results[(time[0].weekday(), time[0].hour)]
+        else:
+            results[(time[0].weekday(), time[0].hour)] = 1
+
+    results = [[key[0], key[1], results[key]] for key in results]
+    divisor = biggest / 22
+    return [result + [result[2] / divisor] if result[2] != 0 else 0 for result in results]
+
 
 def get_search_results(search):
+    """
+    Use in the auto complete to search for usernames and items in drink
+    or snack
+    """
     result = DBSession.query(DropLog.username).filter(DropLog.username.ilike('%' + search + '%')).group_by(DropLog.username).all()
     result += DBSession.query(DrinkItem.item_name).filter(DrinkItem.item_name.ilike('%' + search + '%')).group_by(DrinkItem.item_name).all()
     return result
@@ -13,7 +46,7 @@ def get_drop_count(username):
     """
     The number of drops that a user has done
     """
-    return len(DBSession.query(DropLog).filter(DropLog.username == username).all())
+    return DBSession.query(func.count(DropLog.drop_log_id)).filter(DropLog.username == username).first()[0]
 
 def get_top_users_for_item_year(item_id, limit = 10):
     """
@@ -36,7 +69,7 @@ def get_latest_drops(username, limit = 10):
     """
     Gets the latest drops from the machines
     """
-    return DBSession.query(DropLog, DrinkItem.item_name, Machine.display_name, Machine.machine_id
+    return DBSession.query(DropLog.time, DrinkItem.item_name, Machine.display_name, Machine.machine_id
             ).filter(DropLog.username == username
             ).join(DrinkItem, DropLog.item_id == DrinkItem.item_id
             ).join(Machine, Machine.machine_id ==  DropLog.machine_id
@@ -50,7 +83,7 @@ def get_item_id(item_name):
     return DBSession.query(DrinkItem.item_id).filter(func.lower(DrinkItem.item_name) == func.lower(item_name)).first()
 
 def get_total_dropped(item_id):
-    return len(DBSession.query(DropLog).filter(DropLog.item_id == item_id).all())
+    return DBSession.query(func.count('*')).filter(DropLog.item_id == item_id).first()[0]
 
 def top_drinks_for_machine(machine_id, limit = 10):
     top_drinks = DBSession.query(func.count(DropLog.item_id),
@@ -58,7 +91,7 @@ def top_drinks_for_machine(machine_id, limit = 10):
             ).filter(DropLog.machine_id == machine_id, DrinkItem.item_name != 'test item'
             ).join(DrinkItem, DropLog.item_id == DrinkItem.item_id
             ).group_by(DropLog.item_id
-            ).order_by("count_1 desc"
+            ).order_by(func.count(DropLog.item_id).desc()
             ).limit(limit).all()
     return top_drinks
 

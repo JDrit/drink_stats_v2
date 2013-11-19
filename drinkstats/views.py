@@ -39,9 +39,11 @@ def api_machine_usage(request):
 
 @view_config(route_name='index', renderer='templates/index.pt')
 def index_view(request):
+    start_date = datetime.datetime(year = 2011, month = 10, day = 17)
+    end_date = datetime.datetime.now()
+
     error = None
     if request.method == 'POST':
-        print request.POST
         if ('cal_year', u'Calendar Year') in request.POST.items():
             end_date = datetime.datetime.now()
             start_date = datetime.datetime(year = end_date.year, month = 1, day = 1)
@@ -61,21 +63,16 @@ def index_view(request):
             start_date = datetime.datetime.strptime(request.POST.get('start'), '%m/%d/%Y')
             end_date =  datetime.datetime.strptime(request.POST.get('end'), '%m/%d/%Y')
 
-        top_drinks = drink_log.top_drinks(15, start_date = start_date, end_date = end_date)
-        top_spenders = money_log.top_spenders(15, start_date = start_date, end_date = end_date)
-        hours = drink_log.top_hours(start_date = start_date, end_date = end_date)
-        start_date_format = start_date.strftime('%m/%d/%Y')
-        end_date_format = end_date.strftime('%m/%d/%Y')
-    else:
-        top_drinks = drink_log.top_drinks(15)
-        top_spenders = money_log.top_spenders(15)
-        hours = drink_log.top_hours()
-        start_date_format = '10/17/2011'
-        end_date_format = datetime.datetime.now().strftime('%m/%d/%Y')
-
+    top_drinks = drink_log.top_drinks(15, start_date = start_date, end_date = end_date)
+    top_spenders = money_log.top_spenders(15, start_date = start_date, end_date = end_date)
+    hours = drink_log.top_hours(start_date = start_date, end_date = end_date)
+    punchcard = drink_log.punchcard(start_date = start_date, end_date = end_date)
+    print punchcard
+    start_date_format = start_date.strftime('%m/%d/%Y')
+    end_date_format = end_date.strftime('%m/%d/%Y')
     return {'top_drinks': top_drinks, 'hours': hours,
             'top_users': top_spenders, 'start_date': start_date_format,
-            'end_date': end_date_format, 'error': error}
+            'end_date': end_date_format, 'error': error, 'new_hours': punchcard}
 
 @view_config(route_name='drink_page', renderer='templates/drinks.pt')
 def drinks_view(request):

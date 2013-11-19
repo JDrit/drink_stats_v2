@@ -117,6 +117,8 @@
             </div>
 
             <div id="drinks_over_hours" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <p>Punchcard for ${start_date} to ${end_date}</p>
+            <div id="punchcard" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="drinks_over_time" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
        </div>
 	</div>
@@ -161,7 +163,53 @@
                 });
             });
         </script>
-
+        
+        <script>
+            $(function() {
+                $('#punchcard').highcharts({
+                    exporting: {
+                        enabled: false
+                    },
+                    chart: {
+                        defaultSeriesType: 'scatter'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                       type: "datetime",
+                        dateTimeLabelFormats: {
+                            hour: '%I %P'
+                        },
+                        tickInterval: 3600000 * 1
+                    },
+                    yAxis: {
+                         title: {
+                            text: "Days"
+                        },
+                        categories: ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', '']
+                    },
+                    plotOptions: {
+                        scatter: {
+                            tooltip: {
+                                headerFormat: 'Drinks Dropped: ',
+                                pointFormat: '<b>{point.amount}</b>'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Total Number of Drops',
+                        data: [
+                        {y: 0, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
+                        <tal:block repeat="hour new_hours">
+                        {y: ${hour[0] + 1}, x: 3600000 * ${hour[1]}, amount: ${hour[2]}, marker: { radius: ${hour[3] } }},
+                        </tal:block>
+                        {y: 8, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
+                        ]
+                    }]
+                });
+            });
+        </script>
 
         <script type="text/javascript">
             $(function () {
