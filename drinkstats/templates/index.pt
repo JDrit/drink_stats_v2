@@ -170,6 +170,9 @@
                     exporting: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false
+                    },
                     chart: {
                         defaultSeriesType: 'scatter'
                     },
@@ -192,19 +195,27 @@
                     plotOptions: {
                         scatter: {
                             tooltip: {
-                                headerFormat: 'Drinks Dropped: ',
-                                pointFormat: '<b>{point.amount}</b>'
+                                headerFormat: '',
+                                pointFormat: '{point.format} -  <b>{point.amount} drops</b>'
                             }
                         }
                     },
                     series: [{
                         name: 'Total Number of Drops',
                         data: [
-                        {y: 0, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
-                        <tal:block repeat="hour new_hours">
-                        {y: ${hour[0] + 1}, x: 3600000 * ${hour[1]}, amount: ${hour[2]}, marker: { radius: ${hour[3] } }},
-                        </tal:block>
-                        {y: 8, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
+                            {y: 0, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
+                            <tal:block repeat="hour new_hours">
+                            {
+                                y: ${hour[0] + 1}, 
+                                x: 3600000 * ${hour[1]}, 
+                                amount: ${hour[2]}, 
+                                format: '${hour[4]}',
+                                marker: { 
+                                    radius: ${hour[3]} 
+                                }
+                            },
+                            </tal:block>
+                            {y: 8, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
                         ]
                     }]
                 });
@@ -214,7 +225,13 @@
         <script type="text/javascript">
             $(function () {
                 $('#top_drinks_total').highcharts({
-                    chart: {
+                    exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                   chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
                         plotShadow: false
@@ -263,6 +280,12 @@
             
                 $.getJSON('/api/total', function(data) {
                     $('#drinks_over_time').highcharts('StockChart', {
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
                         chart: {
                             type: 'area'
                         },
@@ -289,8 +312,14 @@
         <script>
             (function($){ // encapsulate jQuery
 
-            $(function () {
+                $(function () {
                     $('#drinks_over_hours').highcharts({
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
                         chart: {
                             type: 'areaspline'
                         },

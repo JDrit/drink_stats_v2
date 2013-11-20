@@ -29,7 +29,7 @@ html, body {
   line-height:1.5;
   font-family: 'Oxygen', sans-serif;
   color:#222222;
-  background:url('/static/images/background.png');
+  background:url('../images/background.png');
   background-repeat: repeat;
 }
 * {

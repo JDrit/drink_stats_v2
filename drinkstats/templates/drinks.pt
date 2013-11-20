@@ -5,7 +5,7 @@
 <head>
 	<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>Drink Stats</title>
+  <title>Drink Stats - ${item_name}</title>
 
   <link rel="stylesheet" href="/static/css/foundation.css" />
   <link rel="stylesheet" href="/static/css/custom.css"/>
@@ -128,6 +128,12 @@
             
                 $.getJSON('/api/drink/${ item_id }', function(data) {
                     $('#drinks_over_time').highcharts('StockChart', {
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
                         rangeSelector : {
                             selected : 1
                         },

@@ -39,10 +39,7 @@ def api_machine_usage(request):
 
 @view_config(route_name='index', renderer='templates/index.pt')
 def index_view(request):
-    start_date = datetime.datetime(year = 2011, month = 10, day = 17)
-    end_date = datetime.datetime.now()
-
-    error = None
+    start_date = end_date = error = None
     if request.method == 'POST':
         if ('cal_year', u'Calendar Year') in request.POST.items():
             end_date = datetime.datetime.now()
@@ -63,11 +60,14 @@ def index_view(request):
             start_date = datetime.datetime.strptime(request.POST.get('start'), '%m/%d/%Y')
             end_date =  datetime.datetime.strptime(request.POST.get('end'), '%m/%d/%Y')
 
+    if not start_date or not end_date or start_date > end_date:
+        start_date = datetime.datetime(year = 2011, month = 10, day = 17)
+        end_date = datetime.datetime.now()
+
     top_drinks = drink_log.top_drinks(15, start_date = start_date, end_date = end_date)
     top_spenders = money_log.top_spenders(15, start_date = start_date, end_date = end_date)
     hours = drink_log.top_hours(start_date = start_date, end_date = end_date)
     punchcard = drink_log.punchcard(start_date = start_date, end_date = end_date)
-    print punchcard
     start_date_format = start_date.strftime('%m/%d/%Y')
     end_date_format = end_date.strftime('%m/%d/%Y')
     return {'top_drinks': top_drinks, 'hours': hours,
@@ -105,7 +105,8 @@ def users_view(request):
         return {'username': username, 'hours': drink_log.top_hours(username),
                 'top_drinks': drink_log.top_drinks(15, username),
                 'drop_count': drop_count, 'error': False,
-                'latest_drops': drink_log.get_latest_drops(username)}
+                'latest_drops': drink_log.get_latest_drops(username),
+                'money': money_log.money_spent(username)}
     else:
         return {'message': 'There is no information about ' + username,
                 'error': True}

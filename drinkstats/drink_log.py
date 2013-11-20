@@ -3,35 +3,61 @@ from sqlalchemy import func
 from sqlalchemy.sql import or_
 from datetime import datetime, timedelta
 
-def punchcard(start_date = None, end_date = None, username = None):
-    data = []
-    results = {}
-    if start_date and end_date:
-        if username:
-            times = DBSession.query(DropLog.time).filter(DropLog.time >= start_date, DropLog.time <= end_date, DropLog.username == username).all()
-        else:
-            times = DBSession.query(DropLog.time).filter(DropLog.time >= start_date, DropLog.time <= end_date).all()
+def format_date(weekday, hour):
+    """
+    This is used to format the display text for the punchcard graph
+    """
+    days = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    result = days[weekday] + ', '
+    if hour == 0:
+        result += 'midnight'
+    elif hour < 12:
+        result += str(hour) + 'am'
+    elif hour == 12:
+        result += 'noon'
     else:
-        if username:
-            times = DBSession.query(DropLog.time).filter(DropLog.username == username).all()
-        else:
-            times = DBSession.query(DropLog.time).all()
+        result += str(hour - 12) + 'pm'
+    return result
+
+
+
+def punchcard(start_date = None, end_date = None):
+    """
+    This gets the information needed to display a punch card style graph
+    of drink usage.
+    Arguments:
+        start_date: the start date to filter results by
+        end_date: the end date to filter resutls by
+    Returns:
+        A list of lists that contains a point for every hour or every weekday.
+            Index 0: weekday
+            Index 1: hour of the weekday
+            Index 2: the amount of drops
+            Index 3: the percentage of drops used to display the circle
+
+        """
+    new_results = []
+    if start_date and end_date:
+        results = DBSession.query(func.weekday(DropLog.time),
+            func.hour(DropLog.time), func.count('*')
+            ).filter(DropLog.time >= start_date, DropLog.time <= end_date
+            ).group_by(func.weekday(DropLog.time), func.hour(DropLog.time)).all()
+
+    else:
+        results = DBSession.query(func.weekday(DropLog.time),
+            func.hour(DropLog.time), func.count('*')
+            ).group_by(func.weekday(DropLog.time), func.hour(DropLog.time)).all()
 
     biggest = 0
-    biggest_key = None
-    for time in times:
-        if (time[0].weekday(), time[0].hour) in results:
-            results[(time[0].weekday(), time[0].hour)] += 1
-            if results[(time[0].weekday(), time[0].hour)] > biggest:
-                biggest_key = (time[0].weekday(), time[0].hour)
-                biggest = results[(time[0].weekday(), time[0].hour)]
-        else:
-            results[(time[0].weekday(), time[0].hour)] = 1
+    for result in results:
+        if result[2] > biggest:
+            biggest = result[2]
+    divisor = (1.0 * biggest) / 22
 
-    results = [[key[0], key[1], results[key]] for key in results]
-    divisor = biggest / 22
-    return [result + [result[2] / divisor] if result[2] != 0 else 0 for result in results]
+    for result in results:
+        new_results.append([result[0], result[1], result[2], result[2] / divisor, format_date(result[0], result[1])])
 
+    return new_results
 
 def get_search_results(search):
     """

@@ -5,7 +5,7 @@
 <head>
 	<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>Drink Stats</title>
+  <title>Drink Stats - ${machine_name}</title>
 
   <link rel="stylesheet" href="/static/css/foundation.css" />
   <link rel="stylesheet" href="/static/css/custom.css"/>
@@ -126,6 +126,12 @@
   <script type="text/javascript">
             $(function () {
                 $('#top_drops_total').highcharts({
+                    exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                        enabled: false
+                    },
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
@@ -175,6 +181,12 @@
             
                 $.getJSON('/api/machine/${machine_id}', function(data) {
                     $('#drops_over_time').highcharts('StockChart', {
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
                         chart: {
                             type: 'area'
                         },
@@ -202,7 +214,13 @@
             (function($){ // encapsulate jQuery
 
             $(function () {
-                    $('#drops_over_hours').highcharts({
+                $('#drops_over_hours').highcharts({
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
                         chart: {
                             type: 'areaspline'
                         },
