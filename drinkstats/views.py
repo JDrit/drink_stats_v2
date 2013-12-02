@@ -97,6 +97,11 @@ def user_redirect(request):
     else:
         return HTTPFound(location = '/')
 
+@view_config(route_name='drink_redirect', renderer='templates/users.pt')
+def drink_redirect(request):
+    username = request.POST.get('username')
+    return HTTPFound(location = 'user/' + username)
+
 @view_config(route_name='user_page', renderer='templates/users.pt')
 def users_view(request):
     username = request.matchdict['username']

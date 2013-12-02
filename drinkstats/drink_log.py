@@ -19,8 +19,6 @@ def format_date(weekday, hour):
         result += str(hour - 12) + 'pm'
     return result
 
-
-
 def punchcard(start_date = None, end_date = None):
     """
     This gets the information needed to display a punch card style graph
@@ -40,7 +38,7 @@ def punchcard(start_date = None, end_date = None):
     if start_date and end_date:
         results = DBSession.query(func.weekday(DropLog.time),
             func.hour(DropLog.time), func.count('*')
-            ).filter(DropLog.time >= start_date, DropLog.time <= end_date
+            ).filter(DropLog.time >= start_date, DropLog.time <= end_date, DropLog.username != 'openhouse'
             ).group_by(func.weekday(DropLog.time), func.hour(DropLog.time)).all()
 
     else:
@@ -95,7 +93,7 @@ def get_latest_drops(username, limit = 10):
     """
     Gets the latest drops from the machines
     """
-    return DBSession.query(DropLog.time, DrinkItem.item_name, Machine.display_name, Machine.machine_id
+    return DBSession.query(DropLog.time, DrinkItem.item_name, Machine.display_name, Machine.machine_id, DrinkItem.item_id
             ).filter(DropLog.username == username
             ).join(DrinkItem, DropLog.item_id == DrinkItem.item_id
             ).join(Machine, Machine.machine_id ==  DropLog.machine_id

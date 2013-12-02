@@ -17,15 +17,14 @@
   <link href='//fonts.googleapis.com/css?family=Merriweather+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
 </head>
 <body>
-	<div id="menu" class="contain-to-grid sticky">
+	<div id="menu">
 		<nav class="top-bar">
 		  <ul class="title-area">
 		    <!-- Title Area -->
 		    <li class="name">
 		      <h1><a href="/"><img src="/static/images/csh.png" alt="CSH Logo"> Drink Stats </a></h1>
 		    </li>
-		    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-		    <li class="toggle-topbar"><a href="#"><span>Menu</span></a></li>
+		    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
 		  </ul>
 
 		  <section class="top-bar-section">
@@ -35,7 +34,7 @@
 
 		    <!-- Right Nav Section -->
 		    <ul class="right">
-		      <li><a href="#">Members Home</a></li>
+		      <li><a href="https://members.csh.rit.edu">Members Home</a></li>
 		      <li><a href="http://www.csh.rit.edu/">Public Site</a></li>
 		      <li><a href="https://members.csh.rit.edu/logout/">Webauth Logout</a></li>
 		    </ul>
@@ -73,7 +72,7 @@
                     <h3>Recent Drops</h3>
                     <tal:block repeat="drop latest_drops">
                     <?python time = drop[0].strftime('%b %d, %Y')?>
-                    <h6><a href="/drink/${drop[0]}">${drop[1]}</a> from <a href="/machine/${drop[3]}">${drop[2]}</a> on ${time}</h6>
+                    <h6><a href="/drink/${drop[4]}">${drop[1]}</a> from <a href="/machine/${drop[3]}">${drop[2]}</a> on ${time}</h6>
                     </tal:block>
                 </div>
             </div>

@@ -2609,7 +2609,7 @@ form.custom {
   height: 45px;
   line-height: 45px;
   position: relative;
-  background: #333;
+  background: #000;
   /*margin-bottom: 1.875em;*/ }
   .top-bar ul {
     margin-bottom: 0;
