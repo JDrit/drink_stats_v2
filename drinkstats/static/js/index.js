@@ -1,22 +1,4 @@
 $(function() {
-	var cache = {};
-	$('#query').autocomplete({
-		minLength: 2,
-		source: function(request, response) {
-			var term = request.term;
-			if (term in cache) {
-				response(cache[term]);
-				return;
-			}
-			$.getJSON("/autocomplete", request, function(data, status, xhr) {
-				cache[term] = data;
-				response(data);
-			});
-		}
-	});
-});
-			
-$(function() {
 	$.getJSON('/api/punchcard?start=' + start + '&end=' + end, function(json) {
 		$('#punchcard').highcharts({
 			exporting: {
@@ -122,106 +104,82 @@ $(function () {
 $(function() {
 	$.getJSON('/api/total', function(data) {
 		$('#drinks_over_time').highcharts('StockChart', {
-						exporting: {
-								enabled: false
-						},
-						credits: {
-								enabled: false
-						},
-						chart: {
-								type: 'areaspline'
-						},
-						rangeSelector : {
-								selected : 1
-						},
-						title : {
-								text : 'Total Drinks Dropped'
-						},
-						yAxis: {
-								min: 0
-						},
-						series : [{
-								name : 'Drinks ',
-								data : data,
-						}]
-				});
-		});
-
+    	exporting: {
+      	enabled: false
+      },
+     	credits: {
+      	enabled: false
+      },
+      chart: {
+      	type: 'areaspline'
+      },
+      rangeSelector : {
+      	selected : 1
+      },
+      title: {
+      	text : 'Total Items Dropped'
+      },
+      yAxis: {
+      	min: 0
+      },
+      series : [{
+      	name : 'Drinks ',
+        data : data,
+      }]
+    });
+  });
 });
 																																						
 $(function () {
 	$.getJSON('/api/hours?start=' + start + '&end=' + end, function(json) {
 		$('#drinks_over_hours').highcharts({
 			exporting: {
-					enabled: false
+				enabled: false
 			},
 			credits: {
-					enabled: false
+				enabled: false
 			},
 			chart: {
-					type: 'areaspline'
+				type: 'areaspline'
 			},
 			title: {
-					text: 'Drinks Bought by Hour'
+				text: 'Drinks Bought by Hour'
 			},
 			legend: {
-					layout: 'vertical',
-					align: 'left',
-					verticalAlign: 'top',
-					x: 150,
-					y: 100,
-					floating: true,
-					borderWidth: 1,
-					backgroundColor: '#FFFFFF'
+				layout: 'vertical',
+				align: 'left',
+				verticalAlign: 'top',
+				x: 150,
+				y: 100,
+				floating: true,
+				borderWidth: 1,
+				backgroundColor: '#FFFFFF'
 			},
 			xAxis: {
-					categories: [
-							'1am',
-							'2am',
-							'3am',
-							'4am',
-							'5am',
-							'6am',
-							'7am',
-							'8am',
-							'9am',
-							'10am',
-							'11am',
-							'noon',
-							'1pm',
-							'2pm',
-							'3pm',
-							'4pm',
-							'5pm',
-							'6pm',
-							'7pm',
-							'8pm',
-							'9pm',
-							'10pm',
-							'11pm',
-							'midnight'
-					]
+				categories: ['1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am',
+					'10am', '11am', 'noon', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm',
+					'8pm', '9pm', '10pm', '11pm', 'midnight']
 			},
 			yAxis: {
-					title: {
-							text: '# of Drinks'
-					}
+				title: {
+					text: '# of Drinks'
+				}
 			},
 			tooltip: {
-					shared: true,
-					valueSuffix: ' drinks'
+				shared: true,
+				valueSuffix: ' drinks'
 			},
 			credits: {
-					enabled: false
+				enabled: false
 			},
 			plotOptions: {
-					areaspline: {
-							fillOpacity: 0.5
-					}
+				areaspline: {
+					fillOpacity: 0.5
+				}
 			},
 			series: [{
-					name: 'Drinks Dropped',
-					data: json
+				name: 'Drinks Dropped',
+				data: json
 			}]
 		})
 	});

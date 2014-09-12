@@ -65,7 +65,7 @@
 			$('#start-datepicker').fdatepicker();
 			$('#end-datepicker').fdatepicker();
 		});
-	</script>
+    </script>
 	<script src="/static/js/index.js"></script>
 </div>
 </html>
