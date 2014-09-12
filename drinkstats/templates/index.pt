@@ -1,404 +1,71 @@
-<!DOCTYPE html>
-<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html metal:use-macro="load: main.pt">
 
-<head>
-	<meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>Drink Stats</title>
-
-  <link rel="stylesheet" href="/static/css/foundation.css" />
-  <link rel="stylesheet" href="/static/css/foundation-datepicker.css" />
-  <link rel="stylesheet" href="/static/css/custom.css"/>
-  <link rel="stylesheet" href="/static/js/jquery-ui.css" />
-  <link rel="icon" href="/static/favicon.ico">
-  <script type="text/js" src="/static/js/vendor/custom.modernizr.js"></script>
-  <script type="text/js" src="/static/js/toWord.js"></script>
-
-  <link href='//fonts.googleapis.com/css?family=Merriweather+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
-</head>
-<body>
-	<div id="menu">
-		<nav class="top-bar">
-		  <ul class="title-area">
-		    <!-- Title Area -->
-		    <li class="name">
-		      <h1><a href="/"><img src="/static/images/csh.png" alt="CSH Logo"> Drink Stats </a></h1>
-		    </li>
-		    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-		  </ul>
-
-		  <section class="top-bar-section">
-		    <!-- Left Nav Section -->
-		    <ul class="left">
-		    </ul>
-
-		    <!-- Right Nav Section -->
-		    <ul class="right">
-		      <li><a href="https://members.csh.rit.edu">Members Home</a></li>
-		      <li><a href="http://www.csh.rit.edu/">Public Site</a></li>
-		      <li><a href="https://members.csh.rit.edu/logout/">Webauth Logout</a></li>
-		    </ul>
-		  </section>
-		</nav>
+<div metal:fill-slot="content">
+	<h1>Overview</h1>
+	<h5><em>${start_date} to ${end_date}</em></h5>
+	<div tal:condition="error" data-alert class="alert-box">
+			${error}
+			<a href="#" class="close">&times;</a>
+	</div>
+	<div class="row">
+			<div class="large-9 columns">
+			<form action="/" method="POST">
+					<div class="row">
+							<div class="large-2 columns">
+									<strong>Start Date:</strong>
+							</div>
+							<div class="large-3 columns">
+									<input type="text" class="span2" name="start" value="${start_date}" id="start-datepicker">
+							</div>
+							<div class="large-2 columns">
+									<strong>End Date:</strong>
+							</div>
+							<div class="large-3 columns">
+									<input type="text" class="span2" name="end" value="${end_date}" id="end-datepicker">
+							</div>
+							<div class="large-1 pull-1 columns">
+									<input class="small button" type="submit" value="submit">
+							</div>
+					</div>
+					<div class="row">
+							<div class="large-2 push-2 columns">
+									<input class="small button" name="school_year" type="submit" value="School Year   ">
+							</div>
+							<div class="large-2 push-2 columns">
+									<input class="small button" name="cal_year" type="submit" value="Calendar Year">
+							</div>
+							<div class="large-2 push-2 columns">
+									<input class="small button" name="last_month" type="submit" value=" Last Month    ">
+							</div>
+							<div class="large-2 pull-2 columns">
+									<input class="small button" name="ever" type="submit" value="     Ever     ">
+							</div>
+					</div>
+			</form>
+			<div id="top_drops_total" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			</div>
+			<div class="large-3 columns text-left">
+					<h5>Top Spenders:</h5>
+					<ol>
+							<tal:block repeat="user top_users">
+							<li>${repeat.user.number}. <a href="/user/${ user[0] }"><strong>${ user[0] }</strong></a>: ${ user[1] } credits</li>
+							</tal:block>
+					</ol>
+			</div>
 	</div>
 
-	<!-- Main Body -->
-	<div id="main" class="row ">
-		<div class="large-12 center columns" id="container">
-			<div class="hide-for-small row panel" id="main-header">
-                <div id="view-options" class="button-bar">
-                    <form action="/user" method="POST">
-                        <input type="text" id="query" name="username" placeholder="username or item">
-                    </form>
-                </div>
-	            <div id="popular">
-                    <ul>
-                        <li><h3>Machines: &nbsp;</h3></li>
-                        <li class="popular"><a href="/machine/2"><h4>Big Drink&nbsp;|</h4></a></li>
-                        <li class="popular"><a href="/machine/1"><h4>&nbsp; Little Drink&nbsp;|</h4></a></li>
-                        <li class="popular"><a href="/machine/3"><h4>&nbsp; Snack&nbsp;</h4></a></li>
-	                </ul>
-                </div>
-            </div>
-            <h1>Overview</h1>
-            <h5><em>${start_date} to ${end_date}</em></h5>
-            <div tal:condition="error" data-alert class="alert-box">
-                ${error}
-                <a href="#" class="close">&times;</a>
-            </div>
-            <div class="row">
-                <div class="large-9 columns">
-                <form action="/" method="POST">
-                    <div class="row">
-                        <div class="large-2 columns">
-                            <strong>Start Date:</strong>
-                        </div>
-                        <div class="large-3 columns">
-                            <input type="text" class="span2" name="start" value="${start_date}" id="start-datepicker">
-                        </div>
-                        <div class="large-2 columns">
-                            <strong>End Date:</strong>
-                        </div>
-                        <div class="large-3 columns">
-                            <input type="text" class="span2" name="end" value="${end_date}" id="end-datepicker">
-                        </div>
-                        <div class="large-1 pull-1 columns">
-                            <input class="small button" type="submit" value="submit">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="large-2 push-2 columns">
-                            <input class="small button" name="school_year" type="submit" value="School Year   ">
-                        </div>
-                        <div class="large-2 push-2 columns">
-                            <input class="small button" name="cal_year" type="submit" value="Calendar Year">
-                        </div>
-                        <div class="large-2 push-2 columns">
-                            <input class="small button" name="last_month" type="submit" value=" Last Month    ">
-                        </div>
-                        <div class="large-2 pull-2 columns">
-                            <input class="small button" name="ever" type="submit" value="     Ever     ">
-                        </div>
-
-                    </div>
-                </form>
-                <div id="top_drinks_total" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>
-                <div class="large-3 columns text-left">
-                    <h5>Top Spenders:</h5>
-                    <ol>
-                        <tal:block repeat="user top_users">
-                        <li>${repeat.user.number}. <a href="/user/${ user[0] }"><strong>${ user[0] }</strong></a>: ${ user[1] } credits</li>
-                        </tal:block>
-                    </ol>
-                </div>
-            </div>
-
-            <div id="drinks_over_hours" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-            <p>Punchcard for ${start_date} to ${end_date}</p>
-            <div id="punchcard" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-            <div id="drinks_over_time" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-       </div>
-	</div>
-
-
-
-  <script>
-	  document.write('<script src=' +
-	  ('__proto__' in {} ? '/static/js/vendor/zepto' : '/staticjs/vendor/jquery') +
-	  '.js><\/script>')
-  </script>
-
-  <script src="/static/js/jquery.min.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-  <script src="/static/js/foundation.min.js"></script>
-  <script src="/static/js/prettify.js"></script>
-  <script src="/static/js/foundation-datepicker.js"></script>
-  <script src="/static/js/highstock.js"></script>
-  <script src="/static/js/exporting.js"></script>
-
-  <script>
-    $(document).foundation();
-  </script>
-
-
-        <script>
-            $(function() {
-                var cache = {};
-                $('#query').autocomplete({
-                    minLength: 2,
-                    source: function(request, response) {
-                        var term = request.term;
-                        if (term in cache) {
-                            response(cache[term]);
-                            return;
-                        }
-                        $.getJSON("/autocomplete", request, function(data, status, xhr) {
-                            cache[term] = data;
-                            response(data);
-                        });
-                    }
-                });
-            });
-        </script>
-        
-        <script>
-            $(function() {
-                $('#punchcard').highcharts({
-                    exporting: {
-                        enabled: false
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    chart: {
-                        defaultSeriesType: 'scatter'
-                    },
-                    title: {
-                        text: ''
-                    },
-                    xAxis: {
-                       type: "datetime",
-                        dateTimeLabelFormats: {
-                            hour: '%I %P'
-                        },
-                        tickInterval: 3600000 * 1
-                    },
-                    yAxis: {
-                         title: {
-                            text: "Days"
-                        },
-                        categories: ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', '']
-                    },
-                    plotOptions: {
-                        scatter: {
-                            tooltip: {
-                                headerFormat: '',
-                                pointFormat: '{point.format} -  <b>{point.amount} drops</b>'
-                            }
-                        }
-                    },
-                    series: [{
-                        name: 'Total Number of Drops',
-                        data: [
-                            {y: 0, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
-                            <tal:block repeat="hour new_hours">
-                            {
-                                y: ${hour[0] + 1}, 
-                                x: 3600000 * ${hour[1]}, 
-                                amount: ${hour[2]}, 
-                                format: '${hour[4]}',
-                                marker: { 
-                                    radius: ${hour[3]} 
-                                }
-                            },
-                            </tal:block>
-                            {y: 8, x: 3600000 * 0, amount: 0, marker: { radius: 0 }},
-                        ]
-                    }]
-                });
-            });
-        </script>
-
-        <script type="text/javascript">
-            $(function () {
-                $('#top_drinks_total').highcharts({
-                    exporting: {
-                        enabled: false
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                   chart: {
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false
-                    },
-                    title: {
-                        text: 'Popularity of Drinks'
-                    },
-                    tooltip: {
-                        pointFormat: '<b>{point.y} {point.name}s</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                color: '#000000',
-                                connectorColor: '#000000',
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                            }
-                        }
-                    },
-                    series: [{
-                        type: 'pie',
-                        name: 'Drinks',
-                        point: {
-                            events: {
-                                click: function(e) {
-                                    location.href = e.point.url;
-                                    e.preventDefault();
-                                }
-                            }
-                        },
-                         
-                        data: [
-                            <tal:block repeat="item top_drinks">
-                            {name: "${str(item[1])}", y: ${item[0]}, url: '/drink/${ item[2] }'},
-                            </tal:block>
-                        ]
-                    }]
-                });
-            });
-        </script>
-        <script>
-            $(function() {
-            
-                $.getJSON('/api/total', function(data) {
-                    $('#drinks_over_time').highcharts('StockChart', {
-                        exporting: {
-                            enabled: false
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        chart: {
-                            type: 'area'
-                        },
-                        rangeSelector : {
-                            selected : 1
-                        },
-                        title : {
-                            text : 'Total Drinks Dropped'
-                        },
-                        yAxis: {
-                            min: 0
-                        },
-                        series : [{
-                            name : 'Drinks ',
-                            data : data,
-                        }]
-                    });
-                });
-            
-            });
-                                                                                        
-        
-        </script>
-        <script>
-            (function($){ // encapsulate jQuery
-
-                $(function () {
-                    $('#drinks_over_hours').highcharts({
-                        exporting: {
-                            enabled: false
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        chart: {
-                            type: 'areaspline'
-                        },
-                        title: {
-                            text: 'Drinks Bought by Hour from ${start_date} to ${end_date}'
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'left',
-                            verticalAlign: 'top',
-                            x: 150,
-                            y: 100,
-                            floating: true,
-                            borderWidth: 1,
-                            backgroundColor: '#FFFFFF'
-                        },
-                        xAxis: {
-                            categories: [
-                                '1am',
-                                '2am',
-                                '3am',
-                                '4am',
-                                '5am',
-                                '6am',
-                                '7am',
-                                '8am',
-                                '9am',
-                                '10am',
-                                '11am',
-                                'noon',
-                                '1pm',
-                                '2pm',
-                                '3pm',
-                                '4pm',
-                                '5pm',
-                                '6pm',
-                                '7pm',
-                                '8pm',
-                                '9pm',
-                                '10pm',
-                                '11pm',
-                                'midnight'
-                            ]
-                        },
-                        yAxis: {
-                            title: {
-                                text: '# of Drinks'
-                            }
-                        },
-                        tooltip: {
-                            shared: true,
-                            valueSuffix: ' drinks'
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            areaspline: {
-                                fillOpacity: 0.5
-                            }
-                        },
-                        series: [{
-                            name: 'Drinks Dropped',
-                            data: [<tal:block repeat="hour hours"> ${ hour }, </tal:block>]
-                        }]
-                    });
-                });
-                
-
-            })(jQuery);
-
-        </script>
-
-        <script>
-            $(function() {
-                $('#start-datepicker').fdatepicker();
-                $('#end-datepicker').fdatepicker();
-            });
-        </script>
-
-
-</body>
+	<div id="drinks_over_hours" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	<p>Punchcard for ${start_date} to ${end_date}</p>
+	<div id="punchcard" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	<div id="drinks_over_time" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	<script>
+		var start = ${start_date_epoch};
+		var end = ${end_date_epoch};
+		$(function() {
+			$('#start-datepicker').fdatepicker();
+			$('#end-datepicker').fdatepicker();
+		});
+	</script>
+	<script src="/static/js/index.js"></script>
+</div>
 </html>

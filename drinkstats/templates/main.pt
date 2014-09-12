@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html>
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Drink Stats</title>
+
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+  <link rel="stylesheet" href="/static/css/foundation-datepicker.css" />
+  <link rel="stylesheet" href="/static/css/custom.css"/>
+  <link rel="stylesheet" href="/static/js/jquery-ui.css" />
+  <link rel="icon" href="/static/favicon.ico">
+  <script type="text/js" src="/static/js/vendor/custom.modernizr.js"></script>
+  <script type="text/js" src="/static/js/toWord.js"></script>
+	<script>
+	  document.write('<script src=' +
+	  ('__proto__' in {} ? '/static/js/vendor/zepto' : '/staticjs/vendor/jquery') +
+	  '.js><\/script>')
+  </script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="/static/js/foundation.min.js"></script>
+  <script src="/static/js/prettify.js"></script>
+  <script src="/static/js/foundation-datepicker.js"></script>
+  <script src="/static/js/highstock.js"></script>
+  <script src="/static/js/exporting.js"></script>
+
+  <link href='//fonts.googleapis.com/css?family=Merriweather+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div id="menu">
+		<nav class="top-bar">
+			<ul class="title-area">
+		  	<!-- Title Area -->
+		    <li class="name">
+		      <h1><a href="/"><img src="/static/images/csh.png" alt="CSH Logo"> Drink Stats </a></h1>
+		    </li>
+		    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+		  </ul>
+		  <section class="top-bar-section">
+		    <!-- Left Nav Section -->
+		    <ul class="left"></ul>
+		    <!-- Right Nav Section -->
+		    <ul class="right">
+		      <li><a href="https://members.csh.rit.edu">Members Home</a></li>
+		      <li><a href="http://www.csh.rit.edu/">Public Site</a></li>
+		      <li><a href="https://members.csh.rit.edu/logout/">Webauth Logout</a></li>
+		    </ul>
+		  </section>
+		</nav>
+	</div>
+
+	<!-- Main Body -->
+	<div id="main" class="row ">
+		<div class="large-12 center columns" id="container">
+			<div class="hide-for-small row panel" id="main-header">
+      	<div id="view-options" class="button-bar">
+        	<form action="/user" method="POST">
+          	<input type="text" id="query" name="username" placeholder="username or item">
+          </form>
+        </div>
+	      <div id="popular">
+        	<ul>
+          	<li><h3>Machines: &nbsp;</h3></li>
+            <li class="popular"><a href="/machine/2"><h4>Big Drink&nbsp;|</h4></a></li>
+            <li class="popular"><a href="/machine/1"><h4>&nbsp; Little Drink&nbsp;|</h4></a></li>
+            <li class="popular"><a href="/machine/3"><h4>&nbsp; Snack&nbsp;</h4></a></li>
+	        </ul>
+				</div>
+      </div>
+			<metal:block define-slot="content" />
+    </div>
+  </div>
+  <br />
+  <h5 style="text-align: center; font-weight: normal;">Made by J.D. - <a href="https://github.com/JDrit/drink_stats_v2"> Drink Stats</a></h5>
+  <br /> 
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+</html>

@@ -24,11 +24,14 @@ def main(global_config, **settings):
     config.add_route('autocomplete', '/autocomplete')
     config.add_route('drink_redirect', '/fordrink')
 
-    config.add_route('api_item_usage', '/api/drink/{item_id}')
+    config.add_route('api_item_usage', '/api/item/{item_id}')
     config.add_route('api_user_usage', '/api/user/{username}')
     config.add_route('api_machine_usage', '/api/machine/{machine_id}')
     config.add_route('api_total_usage', '/api/total')
     config.add_route('api_pop_hours', '/api/hours')
+
+    config.add_route('api_punchcard', '/api/punchcard')
+    config.add_route('api_top_drops', '/api/top_drops')
 
     config.scan()
     return config.make_wsgi_app()
