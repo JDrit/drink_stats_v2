@@ -44,7 +44,7 @@
 			</form>
 			<div id="top_drops_total" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 			</div>
-			<div class="large-3 columns text-left">
+			<div class="large-3 columns text-left" style="padding-left: 0px;">
 					<h5>Top Spenders:</h5>
 					<ol>
 							<tal:block repeat="user top_users">

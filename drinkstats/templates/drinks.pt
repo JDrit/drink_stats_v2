@@ -11,8 +11,8 @@
         <a href="/user/${ user[0] }"><h5>${ user[0] } - ${ user[1] } drops</h5></a>
       </tal:block>
     </div>
-    <div class="large-6 push-1 columns">
-      <h3>Top Users this Year</h3>
+    <div class="large-6 columns">
+      <h3>Top Users this School Year</h3>
       <tal:block repeat="user top_users_year">
         <a href="/user/${ user[0] }"><h5>${ user[0] } - ${ user[1] } drops</h5></a>
       </tal:block>

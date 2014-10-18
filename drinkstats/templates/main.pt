@@ -74,7 +74,7 @@
     </div>
   </div>
   <br />
-  <h5 style="text-align: center; font-weight: normal;">Made by J.D. - <a href="https://github.com/JDrit/drink_stats_v2"> Drink Stats</a></h5>
+  <h5 style="text-align: center; font-weight: normal;"><a href="https://github.com/JDrit/drink_stats_v2">Drink Stats</a></h5>
   <br /> 
   <script>
     $(document).foundation();

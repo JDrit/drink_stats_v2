@@ -127,7 +127,7 @@ def index_view(request):
         start_date = datetime.datetime(year = 2011, month = 10, day = 17)
         end_date = datetime.datetime.now()
 
-    top_spenders = money_log.top_spenders(15, start_date = start_date, end_date = end_date)
+    top_spenders = money_log.top_spenders(20, start_date = start_date, end_date = end_date)
     return {'top_users': top_spenders, 'start_date': start_date.strftime('%m/%d/%Y'),
             'end_date': end_date.strftime('%m/%d/%Y'), 'start_date_epoch': unix_time(start_date),
             'end_date_epoch': unix_time(end_date), 'error': error}
@@ -176,7 +176,7 @@ def users_view(request):
 def machines_view(request):
     machine_id = int(request.matchdict['machine_id'])
     machine_name = machines.get_machine_name(machine_id)
-    top_drops = drink_log.top_drinks_for_machine(machine_id)
+    top_drops = drink_log.top_drinks_for_machine(machine_id, limit = 15)
     return {'top_drops': top_drops, 'machine_id': machine_id,
             'machine_name': machine_name}
 
